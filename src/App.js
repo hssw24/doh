@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-const generateRandomNumber = () => {
-  return Math.floor(Math.random() * 50) + 1; // Zahl zwischen 1 und 50
+const generateRandomNumber = (isDoubleTask) => {
+  let randomNumber = Math.floor(Math.random() * 50) + 1;
+  // Wenn die Aufgabe ist, die Hälfte zu bestimmen, muss die Zahl gerade sein
+  if (!isDoubleTask && randomNumber % 2 !== 0) {
+    randomNumber += 1; // Stelle sicher, dass die Zahl gerade ist
+  }
+  return randomNumber;
 };
 
 const App = () => {
-  const [currentNumber, setCurrentNumber] = useState(generateRandomNumber());
+  const [currentNumber, setCurrentNumber] = useState(generateRandomNumber(true)); // Start mit einer zufälligen Zahl
   const [isDoubleTask, setIsDoubleTask] = useState(true); // Aufgabe: Doppelt oder Hälfte
   const [options, setOptions] = useState([]);
   const [score, setScore] = useState(0);
@@ -48,15 +53,16 @@ const App = () => {
     }
     
     // Nächste Aufgabe vorbereiten
-    setCurrentNumber(generateRandomNumber());
-    setIsDoubleTask(Math.random() > 0.5); // Zufällig zwischen "Doppelt" oder "Hälfte"
+    const newTaskType = Math.random() > 0.5; // Zufällig zwischen "Doppelt" oder "Hälfte"
+    setIsDoubleTask(newTaskType);
+    setCurrentNumber(generateRandomNumber(newTaskType));
   };
 
   const resetGame = () => {
     setScore(0);
     setAttempts(0);
     setCorrectAnswers(0);
-    setCurrentNumber(generateRandomNumber());
+    setCurrentNumber(generateRandomNumber(true));
     setIsDoubleTask(true);
   };
 
